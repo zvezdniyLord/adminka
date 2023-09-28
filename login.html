@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/index.css">
+    <title>Вход</title>
+</head>
+<body class="body">
+    <main class="admin__logout">
+        <div class="admin__logout-block">
+            <h3 class="admin__logout-title">Войти в админ.панель</h3>
+            <form id="admin__logout-id" class="admin__logout-form">
+                <input class="admin__logout-input" type="password" placeholder="Введите пароль">
+            </form>
+            <p class="admin__logout-error">Неверный пароль</p>
+            <a href="./index.html">
+                <button class="btn__admin__logout" type="submit">Войти</button>
+            </a>
+        </div>
+    </main>
+<script>
+    const btn = document.querySelector(".btn__admin__logout");
+    const errorText = document.querySelector(".admin__logout-error");
+    const input = document.querySelector('.admin__logout-input');
+
+    btn.addEventListener("click", (e) => {
+        validateInput(e, input)
+    });
+
+    function validateInput(e, DOMElement) {
+        const PWD = "nbvcxz";
+        if(DOMElement.value == "") {
+            errorText.style.display = "block";
+            e.preventDefault();
+            errorText.textContent = "Вы ввели пустой пароль";
+        } else if(DOMElement.value !== PWD) {
+            errorText.style.display = "block";
+            e.preventDefault();
+        } else {
+            errorText.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>

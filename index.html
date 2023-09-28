@@ -1,0 +1,301 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Админка</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Админка Новостей</h2>
+    <form name="userForm" method="post">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group">
+            <label for="img">Медиа</label>
+            <input class="form-control" name="img" type="file" />
+        </div>
+        <div class="form-group">
+            <label for="title">Заголовок</label>
+            <input class="form-control" name="title" />
+        </div>
+        <div class="form-group">
+            <label for="text">Текст</label>
+            <input class="form-control" name="text" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" class="btn btn-sm btn-primary">Отправить</button>
+        </div>
+    </form>
+    <script>
+    // Получение всех пользователей
+        async function getUsers() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("http://127.0.0.1:3000/api/users", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const users = await response.json();
+            } else {
+                console.log("error")
+            }
+        }
+        // Добавление пользователя
+        async function createUser(img, title, text) {
+            const response = await fetch("http://127.0.0.1:3000/api/users", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    img: img,
+                    title: title,
+                    text: text
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+            } else {
+
+            }
+        }
+        // сброс формы
+        function reset() {
+            const form = document.forms["userForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+        // отправка формы
+        document.forms["userForm"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["userForm"];
+            const id = form.elements["id"].value;
+            const img = form.elements["img"].value;
+            const title = form.elements["title"].value;
+            const text = form.elements["text"].value;
+            createUser(img, title, text);
+        });
+  
+        // загрузка пользователей
+        getUsers();
+         // Изменение пользователя
+         async function editUser(userId, userName, userAge) {
+            const response = await fetch("api/users", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: userId,
+                    name: userName,
+                    age: parseInt(userAge, 10)
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
+            }
+        }
+        // Удаление пользователя
+        async function deleteUser(id) {
+            const response = await fetch("/api/users/" + id, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                document.querySelector("tr[data-rowid='" + user.id + "']").remove();
+            }
+        }
+    </script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Админка</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Админка</h2>
+    <form name="userForm">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group">
+            <label for="name">Медиа файлы:</label>
+            <input type="file" class="form-control" name="img" />
+        </div>
+        <div class="form-group">
+            <label for="age">Заголовок:</label>
+            <input class="form-control" name="title" />
+        </div>
+        <div class="form-group">
+            <label for="age">Текст:</label>
+            <input class="form-control" name="text" />
+        </div>
+        <div class="panel-body">
+            <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+            <a id="reset" class="btn btn-sm btn-primary">Сбросить</a>
+        </div>
+    </form>
+    <table class="table table-condensed table-striped table-bordered">
+        <thead><tr><th>Id</th><th>Медиа</th><th>Заголовок</th><th>Текст</th></tr></thead>
+        <tbody>
+        </tbody>
+    </table>
+   
+    <script>
+    // Получение всех пользователей
+        async function getNews() {
+            const response = await fetch("http://127.0.0.1:3000/api/news", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const users = await response.json();
+                console.log(users)
+                let rows = document.querySelector("tbody");
+                users.rows.forEach(user => rows.append(row(user)))
+            }
+        }
+
+        async function getUser(id) {
+            const response = await fetch(`http://127.0.0.1:3000/api/news/${id}`, {
+             method: "GET",
+            headers: { "Accept": "application/json" }
+        });
+        if (response.ok === true) {
+            const user = await response.json();
+            const form = document.forms["userForm"];
+            form.elements["id"].value = user.id;
+            form.elements["img"].value = user.img;
+            form.elements["title"].value = user.title;
+            form.elements["text"].value = user.text;
+            }
+        }
+        
+        async function createNews(img, title, text) {
+            const response = await fetch("http://127.0.0.1:3000/api/news", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    img: img,
+                    title: title,
+                    text: text
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+            } else {
+
+            }
+        }
+
+        async function editNews(newsId, img, title, text) {
+            const response = await fetch(`http://127.0.0.1:3000/api/news/${newsId}`, {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: newsId,
+                    img: img,
+                    title: title,
+                    text: text
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                reset();
+                document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
+            }
+        }
+
+        async function deleteNews(id) {
+            const response = await fetch(`http://127.0.0.1:3000/api/news/${id}`, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                document.querySelector(`tr[data-rowid='${id}']`).remove();
+            }
+        }
+  
+        // сброс формы
+        function reset() {
+            const form = document.forms["userForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+        // создание строки для таблицы
+        function row(user) {
+  
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", user.id);
+  
+            const idTd = document.createElement("td");
+            idTd.append(user.id);
+            tr.append(idTd);
+  
+            const nameTd = document.createElement("td");
+            nameTd.append(user.img);
+            tr.append(nameTd);
+  
+            const ageTd = document.createElement("td");
+            ageTd.append(user.title);
+            tr.append(ageTd);
+
+            const textTd = document.createElement("td");
+            textTd.append(user.text);
+            tr.append(textTd);
+              
+            const linksTd = document.createElement("td");
+  
+            const editLink = document.createElement("a");
+            editLink.setAttribute("data-id", user.id);
+            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.append("Изменить");
+            editLink.addEventListener("click", e => {
+  
+                e.preventDefault();
+                getUser(user.id);
+            });
+            linksTd.append(editLink);
+  
+            const removeLink = document.createElement("a");
+            removeLink.setAttribute("data-id", user.id);
+            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.append("Удалить");
+            removeLink.addEventListener("click", e => {
+                e.preventDefault();
+                deleteNews(user.id);
+            });
+  
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+  
+            return tr;
+        }
+
+        document.getElementById("reset").addEventListener("click", e => {
+  
+            e.preventDefault();
+            reset();
+        })
+  
+        document.forms["userForm"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["userForm"];
+            const id = form.elements["id"].value;
+            const img = form.elements["img"].value;
+            const title = form.elements["title"].value;
+            const text = form.elements["text"].value;
+            createNews(img, title, text);
+        });
+
+        getNews();
+    </script>
+</body>
+</html>
