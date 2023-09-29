@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/index.css">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        <input type="text" placeholder="img">
+        <input type="text" placeholder="title">
+        <input type="text" placeholder="text">
+        <button type="submit">добавить новость</button>
+    </form>
+    <section class="news">
+        <div class="container">
+            <h2 class="news__title">Новости</h2>
+            <div class="news__blocks">
+                
+                                                              
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    res();
+})
+const btn = document.querySelector("button");
+async function res() {
+    const response = await fetch('http://127.0.0.1:3000/api/news', );
+if(response.ok) {
+    const result = await response.json()
+    .then(data => setData(data));
+} else {
+    console.log(`response ne ok`);
+}
+}
+
+const setData = data => {
+    data.rows.forEach(d => {
+        console.log(d)
+        document.querySelector(".news__blocks").insertAdjacentHTML("afterbegin", `
+        <div class="news-hover">
+        <div class="news__block">
+            <picture>
+                <img loading="lazy" class="news__block-image" src="./media/Innoprom_2023.png" alt="${d.img}">
+            </picture>
+            <h3 class="news__block-title">${d.title}</h3>
+            <p class="news__block-text" style="margin-top: 0.7rem">${d.text}</p>
+            <p class="news__block-text"></p>
+        </div>
+    </div>
+        `)
+    })
+};
+    </script>
+</body>
+</html>

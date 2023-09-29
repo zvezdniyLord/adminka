@@ -133,7 +133,7 @@
         </div>
         <div class="form-group">
             <label for="age">Текст:</label>
-            <input class="form-control" name="text" />
+            <textarea class="form-control" name="text"></textarea>
         </div>
         <div class="panel-body">
             <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
@@ -141,7 +141,7 @@
         </div>
     </form>
     <table class="table table-condensed table-striped table-bordered">
-        <thead><tr><th>Id</th><th>Медиа</th><th>Заголовок</th><th>Текст</th></tr></thead>
+        <thead><tr><th>Id</th><th>Медиа</th><th>Заголовок</th><th></th></tr></thead>
         <tbody>
         </tbody>
     </table>
@@ -208,7 +208,9 @@
             if (response.ok === true) {
                 const user = await response.json();
                 reset();
-                document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
+                //users.rows.forEach(user => rows.append(row(user)))
+                user.rows.forEach(u => document.querySelector("tr[data-rowid='" + u + "']").replaceWith(row(user)))
+                //document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
             }
         }
 
@@ -239,10 +241,6 @@
             idTd.append(user.id);
             tr.append(idTd);
   
-            const nameTd = document.createElement("td");
-            nameTd.append(user.img);
-            tr.append(nameTd);
-  
             const ageTd = document.createElement("td");
             ageTd.append(user.title);
             tr.append(ageTd);
@@ -258,7 +256,9 @@
             editLink.setAttribute("style", "cursor:pointer;padding:15px;");
             editLink.append("Изменить");
             editLink.addEventListener("click", e => {
-  
+                const userID = user => {
+                    return user.id;
+                }
                 e.preventDefault();
                 getUser(user.id);
             });
@@ -280,7 +280,6 @@
         }
 
         document.getElementById("reset").addEventListener("click", e => {
-  
             e.preventDefault();
             reset();
         })
@@ -292,6 +291,7 @@
             const img = form.elements["img"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
+            console.log(img);
             createNews(img, title, text);
         });
 

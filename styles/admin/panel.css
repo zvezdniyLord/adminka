@@ -1,0 +1,22 @@
+.admin__panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn__admin__panel {
+    margin: 2rem 0 0 2rem;
+}
+
+.admin__panel-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin__panel-a {
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 2rem;
+}

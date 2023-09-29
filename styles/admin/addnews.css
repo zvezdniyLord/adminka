@@ -1,0 +1,29 @@
+.admin__add {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin__add-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin__add-form > input {
+    margin-top: 2rem;
+    height: 35px;
+    text-align: center;
+}
+
+.btn__admin__add {
+    height: 35px;
+    width: 100%;
+    margin-top: 1rem;
+    background-color: var(--color-black-blue);
+    color: #ffff;
+    font-weight: 700;
+    font-size: 1rem;
+}
