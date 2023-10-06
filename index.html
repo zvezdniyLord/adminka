@@ -122,7 +122,7 @@
 <body>
     <h2>Админка</h2>
     <form name="userForm">
-        <input type="hidden" name="id" value="0" />
+        <input id="input-id" type="hidden" name="id" value="0" />
         <div class="form-group">
             <label for="name">Медиа файлы:</label>
             <input type="file" class="form-control" name="img" />
@@ -147,7 +147,6 @@
     </table>
    
     <script>
-    // Получение всех пользователей
         async function getNews() {
             const response = await fetch("http://127.0.0.1:3000/api/news", {
                 method: "GET",
@@ -155,24 +154,30 @@
             });
             if (response.ok === true) {
                 const users = await response.json();
-                console.log(users)
                 let rows = document.querySelector("tbody");
-                users.rows.forEach(user => rows.append(row(user)))
+                users.forEach(user => rows.append(row(user)))
             }
         }
 
         async function getUser(id) {
             const response = await fetch(`http://127.0.0.1:3000/api/news/${id}`, {
-             method: "GET",
-            headers: { "Accept": "application/json" }
+                method: "GET",
+                headers: { "Accept": "application/json" }
         });
         if (response.ok === true) {
             const user = await response.json();
-            const form = document.forms["userForm"];
-            form.elements["id"].value = user.id;
-            form.elements["img"].value = user.img;
-            form.elements["title"].value = user.title;
-            form.elements["text"].value = user.text;
+            //user.forEach(u => console.log(u));
+            //const form = document.forms["userForm"];
+            const form = document.querySelector("form");
+            //form.elements["img"].value = user[0].img;
+            form.elements["id"].value = user[0].id;
+            form.elements["title"].value = user[0].title;
+            form.elements["text"].value = user[0].text;
+            /*user.forEach(u => {
+                form.elements["img"].value = u.img;
+                form.elements["title"].value = u.title;
+                form.elements["text"].value = u.text
+            })*/
             }
         }
         
@@ -207,10 +212,10 @@
             });
             if (response.ok === true) {
                 const user = await response.json();
-                reset();
                 //users.rows.forEach(user => rows.append(row(user)))
-                user.rows.forEach(u => document.querySelector("tr[data-rowid='" + u + "']").replaceWith(row(user)))
+                user.rows.forEach(u => document.querySelector("tr[data-rowid='" + u.id + "']").replaceWith(row(user)))
                 //document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
+            } else {
             }
         }
 
@@ -225,13 +230,13 @@
             }
         }
   
-        // сброс формы
+     
         function reset() {
             const form = document.forms["userForm"];
             form.reset();
             form.elements["id"].value = 0;
         }
-        // создание строки для таблицы
+        
         function row(user) {
   
             const tr = document.createElement("tr");
@@ -240,6 +245,10 @@
             const idTd = document.createElement("td");
             idTd.append(user.id);
             tr.append(idTd);
+
+            const imgTd = document.createElement("td");
+            imgTd.append(user.img);
+            tr.append(imgTd);
   
             const ageTd = document.createElement("td");
             ageTd.append(user.title);
@@ -256,9 +265,6 @@
             editLink.setAttribute("style", "cursor:pointer;padding:15px;");
             editLink.append("Изменить");
             editLink.addEventListener("click", e => {
-                const userID = user => {
-                    return user.id;
-                }
                 e.preventDefault();
                 getUser(user.id);
             });
@@ -291,8 +297,13 @@
             const img = form.elements["img"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
-            console.log(img);
-            createNews(img, title, text);
+            console.log(id);
+            if(id == 0) {
+                createNews(img, title, text)
+            } else {
+                editNews(id, img, title, text)
+            }
+            
         });
 
         getNews();

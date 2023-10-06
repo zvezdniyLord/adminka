@@ -25,7 +25,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
     res();
-})
+    })
 const btn = document.querySelector("button");
 async function res() {
     const response = await fetch('http://127.0.0.1:3000/api/news', );
@@ -38,7 +38,8 @@ if(response.ok) {
 }
 
 const setData = data => {
-    data.rows.forEach(d => {
+    console.log(data);
+    data.forEach(d => {
         console.log(d)
         document.querySelector(".news__blocks").insertAdjacentHTML("afterbegin", `
         <div class="news-hover">
