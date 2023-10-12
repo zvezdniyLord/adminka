@@ -121,6 +121,7 @@
 </head>
 <body>
     <h2>Админка</h2>
+    <a href="./login.html">Выйти</a>
     <form name="userForm">
         <input id="input-id" type="hidden" name="id" value="0" />
         <div class="form-group">
@@ -145,7 +146,6 @@
         <tbody>
         </tbody>
     </table>
-   
     <script>
         async function getNews() {
             const response = await fetch("http://127.0.0.1:3000/api/news", {
@@ -170,6 +170,9 @@
             //const form = document.forms["userForm"];
             const form = document.querySelector("form");
             //form.elements["img"].value = user[0].img;
+            /*const formID = form.elements["id"].value
+            const formTitle = form.elements["title"].value
+            const formText = form.elements["text"].value*/
             form.elements["id"].value = user[0].id;
             form.elements["title"].value = user[0].title;
             form.elements["text"].value = user[0].text;
@@ -195,7 +198,7 @@
                 const user = await response.json();
                 reset();
             } else {
-
+                throw new Error;
             }
         }
 
@@ -216,6 +219,7 @@
                 user.rows.forEach(u => document.querySelector("tr[data-rowid='" + u.id + "']").replaceWith(row(user)))
                 //document.querySelector("tr[data-rowid='" + user.id + "']").replaceWith(row(user));
             } else {
+                throw new Error;
             }
         }
 
@@ -297,7 +301,7 @@
             const img = form.elements["img"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
-            console.log(id);
+            
             if(id == 0) {
                 createNews(img, title, text)
             } else {
@@ -305,6 +309,8 @@
             }
             
         });
+
+        const checkLengthInput = (input) => input.length <= 120 ? true : false;
 
         getNews();
     </script>

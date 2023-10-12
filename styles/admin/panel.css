@@ -20,3 +20,14 @@
     font-weight: 700;
     margin-top: 2rem;
 }
+
+.warning-length {
+    text-transform: uppercase;
+    color: rgb(209, 4, 4);
+    font-weight: 700;
+    display: none;
+}
+
+.warning-length-block {
+    display: block;
+}
