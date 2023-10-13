@@ -31,3 +31,7 @@
 .warning-length-block {
     display: block;
 }
+
+.warning-120 {
+    display: none;
+}

@@ -117,6 +117,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Админка</title>
+    <link rel="stylesheet" href="./styles/index.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -132,6 +133,7 @@
             <label for="age">Заголовок:</label>
             <input class="form-control" name="title" />
         </div>
+        <p class="warning-120">WARNING</p>
         <div class="form-group">
             <label for="age">Текст:</label>
             <textarea class="form-control" name="text"></textarea>
@@ -147,6 +149,7 @@
         </tbody>
     </table>
     <script>
+        const WARNING = document.querySelector(".warning-120");
         async function getNews() {
             const response = await fetch("http://127.0.0.1:3000/api/news", {
                 method: "GET",
@@ -303,15 +306,16 @@
             const text = form.elements["text"].value;
             
             if(id == 0) {
-                createNews(img, title, text)
+                createNews(img, title, text) && checkLengthInput(title);
             } else {
-                editNews(id, img, title, text)
+                editNews(id, img, title, text) && checkLengthInput(title);
             }
             
         });
 
-        const checkLengthInput = (input) => input.length <= 120 ? true : false;
-
+        const checkLengthInput = (input) => input.length <= 120 ? true && closeAlert(WARNING) : viewAlert(WARNING);
+        const viewAlert = DOMElement => DOMElement.style.display = "block";
+        const closeAlert = DOMElement => DOMElement.style.display = "none";
         getNews();
     </script>
 </body>
