@@ -1,5 +1,7 @@
 const express = require("express");
 const pg = require('./db');
+const fs = require("fs");
+const path = require("path");
 const app = express();
 const PORT = 3000;
 const cors = require("cors");
@@ -34,21 +36,35 @@ app.post('/api/news', async (req, res) => {
     }
 });
 
+app.post('/api/news/file', async(req, res) => {
+    const {file} = req.body;
+    const readAbleFile = fs.readdirSync(path.dirname("/")).push({file});
+    res.end(JSON.stringify(readAbleFile));
+});
+
 app.delete("/api/news/:id", async (req, res) => {
     const id = req.params.id;
-    const deleteNews = await pg.query(`DELETE FROM news WHERE id = $1`, [id]);
-    res.status(200).end(JSON.stringify(deleteNews));
+    if(!id) {
+        res.end("Новости с такой ID нет");
+    } else {
+        const deleteNews = await pg.query(`DELETE FROM news WHERE id = $1`, [id]);
+        res.status(200).end(JSON.stringify(deleteNews));    
+    }
 });
 
 app.put('/api/news/:id', async (req, res) => {
     const id = req.params.id;
     const {img, title, text} = req.body;
-    const updateNews = await pg.query(`UPDATE news set img = $1, title = $2, text = $3 WHERE id = $4`, [img, title, text, id], (err, result) => {
-        if(err) {
-            throw new Error;
-        }
-        res.end(JSON.stringify(updateNews));
-    });
+    if(title.length > 120) {
+        res.end("Введено больше 120 символов");
+    } else {
+        const updateNews = await pg.query(`UPDATE news set img = $1, title = $2, text = $3 WHERE id = $4`, [img, title, text, id], (err, result) => {
+            if(err) {
+                throw new Error;
+            }
+            res.end(JSON.stringify(updateNews));
+        });            
+    }
 });
 
 app.listen(PORT, () => console.log(`server start ${PORT}`));

@@ -133,7 +133,7 @@
             <label for="age">Заголовок:</label>
             <input class="form-control" name="title" />
         </div>
-        <p class="warning-120">WARNING</p>
+        <p class="warning-120">Введено больше 120 символов</p>
         <div class="form-group">
             <label for="age">Текст:</label>
             <textarea class="form-control" name="text"></textarea>
@@ -144,7 +144,14 @@
         </div>
     </form>
     <table class="table table-condensed table-striped table-bordered">
-        <thead><tr><th>Id</th><th>Медиа</th><th>Заголовок</th><th></th></tr></thead>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Медиа</th>
+                <th>Заголовок</th>
+                <th>Текст</th>
+            </tr>
+        </thead>
         <tbody>
         </tbody>
     </table>
@@ -177,6 +184,7 @@
             const formTitle = form.elements["title"].value
             const formText = form.elements["text"].value*/
             form.elements["id"].value = user[0].id;
+            //form.elements["img"].value = user[0].img;
             form.elements["title"].value = user[0].title;
             form.elements["text"].value = user[0].text;
             /*user.forEach(u => {
@@ -253,7 +261,7 @@
             idTd.append(user.id);
             tr.append(idTd);
 
-            const imgTd = document.createElement("td");
+            const imgTd = document.createElement("p");
             imgTd.append(user.img);
             tr.append(imgTd);
   
@@ -304,16 +312,17 @@
             const img = form.elements["img"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
-            
+            const inputTitle = form.elements["title"];
+            const warningText = document.querySelector(".warning-120");
             if(id == 0) {
-                createNews(img, title, text) && checkLengthInput(title);
+                checkLengthInput(title, warningText) && createNews(img, title, text);
             } else {
-                editNews(id, img, title, text) && checkLengthInput(title);
+                checkLengthInput(title, warningText) && editNews(id, img, title, text);
             }
             
         });
 
-        const checkLengthInput = (input) => input.length <= 120 ? true && closeAlert(WARNING) : viewAlert(WARNING);
+        const checkLengthInput = (input, DOMElement) => input.length <= 120 ? closeAlert(DOMElement) : viewAlert(DOMElement);
         const viewAlert = DOMElement => DOMElement.style.display = "block";
         const closeAlert = DOMElement => DOMElement.style.display = "none";
         getNews();
