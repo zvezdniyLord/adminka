@@ -127,7 +127,7 @@
         <input id="input-id" type="hidden" name="id" value="0" />
         <div class="form-group">
             <label for="name">Медиа файлы:</label>
-            <input type="file" class="form-control" name="img" />
+            <input type="file" class="form-control" name="uploadFile" />
         </div>
         <div class="form-group">
             <label for="age">Заголовок:</label>
@@ -195,12 +195,12 @@
             }
         }
         
-        async function createNews(img, title, text) {
+        async function createNews(uploadFile, title, text) {
             const response = await fetch("http://127.0.0.1:3000/api/news", {
                 method: "POST",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    img: img,
+                    uploadFile: uploadFile,
                     title: title,
                     text: text
                 })
@@ -213,13 +213,13 @@
             }
         }
 
-        async function editNews(newsId, img, title, text) {
+        async function editNews(newsId, uploadFile, title, text) {
             const response = await fetch(`http://127.0.0.1:3000/api/news/${newsId}`, {
                 method: "PUT",
                 headers: { "Accept": "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id: newsId,
-                    img: img,
+                    uploadFile: uploadFile,
                     title: title,
                     text: text
                 })
@@ -261,7 +261,8 @@
             idTd.append(user.id);
             tr.append(idTd);
 
-            const imgTd = document.createElement("p");
+            const imgTd = document.createElement("img");
+            imgTd.setAttribute("src", `/public/${user.img}`)
             imgTd.append(user.img);
             tr.append(imgTd);
   
@@ -309,11 +310,11 @@
             e.preventDefault();
             const form = document.forms["userForm"];
             const id = form.elements["id"].value;
-            const img = form.elements["img"].value;
+            const img = form.elements["uploadFile"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
-            const inputTitle = form.elements["title"];
             const warningText = document.querySelector(".warning-120");
+
             if(id == 0) {
                 checkLengthInput(title, warningText) && createNews(img, title, text);
             } else {
