@@ -10,35 +10,36 @@
     <main class="admin__logout">
         <div class="admin__logout-block">
             <h3 class="admin__logout-title">Войти в админ.панель</h3>
-            <form id="admin__logout-id" class="admin__logout-form">
-                <input class="admin__logout-input" type="password" placeholder="Введите пароль">
+            <form id="admin__logout-id" class="admin__logout-form" method="post">
+                <input class="admin__logout-input" type="password" placeholder="Введите пароль" name="password">
             </form>
             <p class="admin__logout-error">Неверный пароль</p>
-            <a href="./index.html">
-                <button class="btn__admin__logout" type="submit">Войти</button>
-            </a>
+            <button class="btn__admin__logout" type="submit">Войти</button>
         </div>
     </main>
 <script>
     const btn = document.querySelector(".btn__admin__logout");
     const errorText = document.querySelector(".admin__logout-error");
-    const input = document.querySelector('.admin__logout-input');
 
-    btn.addEventListener("click", (e) => {
-        validateInput(e, input)
+    btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const input = document.querySelector('.admin__logout-input').value;
+        await login(input);
     });
 
-    function validateInput(e, DOMElement) {
-        const PWD = "nbvcxz";
-        if(DOMElement.value == "") {
-            errorText.style.display = "block";
-            e.preventDefault();
-            errorText.textContent = "Вы ввели пустой пароль";
-        } else if(DOMElement.value !== PWD) {
-            errorText.style.display = "block";
-            e.preventDefault();
+    async function login(password) {
+        const response = await fetch("http://127.0.0.1:3000/login/", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                password: password
+            })
+        });
+        if(response.ok) {
+            window.location.href = "http://127.0.0.1:5501/index.html";
+            const login = await response.json();
         } else {
-            errorText.style.display = "none";
+            throw new Error("Ошибка");
         }
     }
 </script>

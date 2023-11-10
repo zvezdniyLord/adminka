@@ -126,8 +126,8 @@
     <form name="userForm">
         <input id="input-id" type="hidden" name="id" value="0" />
         <div class="form-group">
-            <label for="name">Медиа файлы:</label>
-            <input type="file" class="form-control" name="uploadFile" />
+            <label for="inputID">Медиа файлы:</label>
+            <input type="file" class="form-control" name="inputID" />
         </div>
         <div class="form-group">
             <label for="age">Заголовок:</label>
@@ -138,11 +138,13 @@
             <label for="age">Текст:</label>
             <textarea class="form-control" name="text"></textarea>
         </div>
+        
         <div class="panel-body">
             <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
             <a id="reset" class="btn btn-sm btn-primary">Сбросить</a>
         </div>
     </form>
+    <a href="./allnews.html"></a>
     <table class="table table-condensed table-striped table-bordered">
         <thead>
             <tr>
@@ -156,7 +158,10 @@
         </tbody>
     </table>
     <script>
+        
         const WARNING = document.querySelector(".warning-120");
+        const inputID = document.getElementById("inputID");
+
         async function getNews() {
             const response = await fetch("http://127.0.0.1:3000/api/news", {
                 method: "GET",
@@ -185,6 +190,7 @@
             const formText = form.elements["text"].value*/
             form.elements["id"].value = user[0].id;
             //form.elements["img"].value = user[0].img;
+            form.elements["inputID"].value = user[0].img;
             form.elements["title"].value = user[0].title;
             form.elements["text"].value = user[0].text;
             /*user.forEach(u => {
@@ -205,9 +211,25 @@
                     text: text
                 })
             });
+            console.log(response.body)
             if (response.ok === true) {
-                const user = await response.json();
                 reset();
+                const user = await response.json();
+            } else {
+                throw new Error;
+            }
+        }
+
+        async function postFile(file) {
+            const response = await fetch("http://127.0.0.1:3000/file", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    inputID: inputID
+                })
+            });
+            if(response.ok === true) {
+                const file = await response.json();
             } else {
                 throw new Error;
             }
@@ -251,7 +273,7 @@
             form.reset();
             form.elements["id"].value = 0;
         }
-        
+         
         function row(user) {
   
             const tr = document.createElement("tr");
@@ -310,7 +332,7 @@
             e.preventDefault();
             const form = document.forms["userForm"];
             const id = form.elements["id"].value;
-            const img = form.elements["uploadFile"].value;
+            const img = form.elements["inputID"].value;
             const title = form.elements["title"].value;
             const text = form.elements["text"].value;
             const warningText = document.querySelector(".warning-120");
@@ -322,6 +344,7 @@
             }
             
         });
+
 
         const checkLengthInput = (input, DOMElement) => input.length <= 120 ? closeAlert(DOMElement) : viewAlert(DOMElement);
         const viewAlert = DOMElement => DOMElement.style.display = "block";
